@@ -1,0 +1,45 @@
+body {
+   background-image: url("../images/background.png");
+}
+
+img {
+   width: 130px;
+}
+
+table {
+   cursor: pointer;
+   background-color: white;
+}
+
+#AdBanner {
+   float: left;
+   width: 180px;
+   margin-left: 10px;
+}
+
+/* On screens that are 992px or less */
+
+@media screen and (max-width: 992px) {
+   body {
+      display: flex;
+      flex-direction: column-reverse;
+   }
+   img {
+      width: 120px;
+   }
+   .container {
+      order: 1;
+      margin-top: 10px;
+      text-align: center;
+      align-items: center;
+   }
+   #AdBanner {
+      order: 2;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: 160px;
+      position: absolute;
+      left: 48%;
+      transform: translateX(-50%);
+   }
+}
