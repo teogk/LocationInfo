@@ -21,7 +21,7 @@ function App($) {
 
     //HTML handling begin
     const addRowToTable = function (index, value) {
-        tableIndex = index;
+        tableIndex = index + 1;
         const newRowContent = "<tr><td class='selectedPlace'>" + value.name + "</td></tr>";
         table.append(newRowContent)
     };

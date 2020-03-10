@@ -1,8 +1,12 @@
 body {
-   background-image: url("../images/background.png");
+   background: rgba(0, 0, 0, .10) url("../images/background.jpg");
+   background-attachment: fixed;
+   background-position: center;
+   background-blend-mode: darken;
+   background-size: cover;
 }
 
-img {
+#img {
    width: 130px;
 }
 
