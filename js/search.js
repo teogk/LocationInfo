@@ -53,7 +53,7 @@ function App($) {
             searchButton.prop('disabled', true);
         }
     }
-    
+
     function getLocations() {
 
         let URL = "http://35.180.182.8/search";
@@ -67,8 +67,8 @@ function App($) {
             Smartjax.ajax(options);
         } else {
             getDataFromSessionStorage(URL);
-        }  
-        
+        }
+
         window.timer = setTimeout(clearTimer, 300000); // clear Session Storage cache after 5 minutes
     }
 

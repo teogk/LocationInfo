@@ -31,20 +31,25 @@
         <div class="row mt-3">
 
             <div class="col-12 col-lg-2">
-                <img id="img" class="img-fluid mb-3" src="images/location.png" alt="location">
+                <a href="index.html">
+                    <img id="img" class="img-fluid mb-3" src="images/location.png" alt="location">
+                </a>
             </div>
 
-            <div class="col-12 col-lg-10">
+            <div class="col-12 col-lg-8">
                 <h1>What place are you loking for?</h1>
+
                 <!-- INPUT -->
-                <input type="text" id="input" class="col-12" placeholder="&#128269;">
+                <input id="input" class="form-control my-3" type="text" placeholder="&#128269; Search"
+                    aria-label="Search">
 
                 <!-- OUTPUT -->
                 <div>
-                    <table class="border table table-hover">
+                    <table class="table">
                         <tbody id="dataTable"></tbody>
                     </table>
                 </div>
+                
                 <!-- SEARCH BUTTON -->
                 <button id="searchButton" class="btn btn-success rounded-1 my-1" disabled>
                     <b>Click to search</b>

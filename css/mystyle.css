@@ -12,7 +12,15 @@ body {
 
 table {
    cursor: pointer;
-   background-color: white;
+   background-color: rgba(172, 196, 212, 0.911);
+   border-radius: 8px;
+   border-collapse: collapse;
+   border-style: hidden;
+   font-size: 17px;
+}
+
+table tr :hover {
+   background-color: rgba(156, 189, 211, 0.911);
 }
 
 #AdBanner {
