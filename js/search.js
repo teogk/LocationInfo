@@ -5,16 +5,13 @@ function App($) {
     const input = $("#input");
     const table = $("#dataTable");
     const searchButton = $("#searchButton");
+    const whatPlace = $("#whatPlace");
     let resultsCount = 20;
     let tableIndex = 0;
-    let userLanguage = navigator.language || navigator.userLanguage;
-
-    userLanguage = userLanguage.substring(0, 2);
-    if (userLanguage.toLowerCase() != "el") { //If it isn't greek make it english to support other languages
-        userLanguage = "en"
-    }
-
-    $(document).ready(limitResultsIfNeeded); //Set up results count
+    let userLanguage = navigator.language;    
+    
+    handleUserLanguage();
+    limitResultsIfNeeded(); //Set up results count
     input.focus();
     input.on("input", handleInput);
     searchButton.on("click", searchToGoogle);
@@ -87,6 +84,17 @@ function App($) {
 
     function clearTimer() {
         sessionStorage.clear();
+    }
+
+    function handleUserLanguage() {
+        userLanguage = userLanguage.toLowerCase().substring(0, 2);
+        if (userLanguage == "el") {
+            whatPlace.html("Ποιο μέρος θέλετε να αναζητήσετε;")
+            input.attr("placeholder", "π.χ. Αθήνα");
+            searchButton.text("Αναζήτηση");
+        } else {
+            userLanguage = "en"; //Make it english to support other languages
+        }
     }
 
     //search Button - Google
