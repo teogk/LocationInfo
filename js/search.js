@@ -8,12 +8,14 @@ function App($) {
     const whatPlace = $("#whatPlace");
     let resultsCount = 20;
     let tableIndex = 0;
-    let userLanguage = navigator.language;    
-    
+    let userLanguage = navigator.language;
+
     handleUserLanguage();
     limitResultsIfNeeded(); //Set up results count
     input.focus();
-    input.on("input", handleInput);
+
+    input.on("keypress", handleInput);
+    input.on("keyup", handleWhenUserDeletesInput);
     searchButton.on("click", searchToGoogle);
 
     //HTML handling begin
@@ -36,18 +38,31 @@ function App($) {
             resultsCount = 10;
         }
     }
+    function handleWhenUserDeletesInput() {
+        const inputLength = input.val().length;
+
+        if (inputLength < 2) {
+            clearTimeout(window.timer);
+            table.empty();
+            searchButton.prop('disabled', true);
+        }
+    }
+
+    function translateInGreek() {
+        whatPlace.html("Ποιο μέρος θέλετε να αναζητήσετε;")
+        input.attr("placeholder", "π.χ. Αθήνα");
+        searchButton.text("Αναζήτηση");
+    }
     //HTML handling end
 
-    function handleInput() {
+
+    function handleInput(e) {
+        handleInputLanguage(e);
         const inputLength = input.val().length;
 
         if (inputLength > 1) {
             clearTimeout(window.timer);
             window.timer = setTimeout(getLocations, 700);
-        } else if (inputLength < 2) { // Handling when user is deleting and reaching input length 1 and below
-            clearTimeout(window.timer);
-            table.empty();
-            searchButton.prop('disabled', true);
         }
     }
 
@@ -59,14 +74,17 @@ function App($) {
         const limit = "&limit=" + resultsCount;
         URL = URL + searchText + language + limit;
 
-        if (sessionStorage.getItem(URL) === null) { // make the call if searchText isn't cached
-            const options = { url: URL, success: handleResponce };
+        if (sessionStorage.getItem(URL) === null) { // Make the call if url isn't cached
+            const options = {
+                url: URL,
+                success: handleResponce,
+                error: handleError
+            };
             Smartjax.ajax(options);
         } else {
             getDataFromSessionStorage(URL);
         }
-
-        window.timer = setTimeout(clearTimer, 300000); // clear Session Storage cache after 5 minutes
+        window.timer = setTimeout(clearTimer, 300000); // Clear Session Storage cache after 5 minutes
     }
 
     function handleResponce(data) {
@@ -89,15 +107,38 @@ function App($) {
     function handleUserLanguage() {
         userLanguage = userLanguage.toLowerCase().substring(0, 2);
         if (userLanguage == "el") {
-            whatPlace.html("Ποιο μέρος θέλετε να αναζητήσετε;")
-            input.attr("placeholder", "π.χ. Αθήνα");
-            searchButton.text("Αναζήτηση");
+            translateInGreek();
         } else {
-            userLanguage = "en"; //Make it english to support other languages
+            userLanguage = "en"; //Make it English to support other languages
         }
     }
 
-    //search Button - Google
+    function handleInputLanguage(e) {
+        handleGreekInput(e);
+        handleEnglishInput(e);
+    }
+
+    function handleGreekInput(e) {
+        let regex = new RegExp("^[α-ωΑ-Ω]*$");
+        let str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            userLanguage = "el";
+        }
+    }
+
+    function handleEnglishInput(e) {
+        let regex = new RegExp("^[a-zA-Z]*$");
+        let str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            userLanguage = "en";
+        }
+    }
+
+    function handleError(jqXHR, textStatus, errorThrown) {
+        console.log(textStatus, errorThrown);
+    };
+
+    //Search Button - Google
     function searchToGoogle() {
         window.open('http://www.google.com/search?q=' + input.val(), '_blank');
         input.val("").focus();
