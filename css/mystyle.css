@@ -6,6 +6,12 @@ body {
    background-size: cover;
 }
 
+#input {
+   position: -webkit-sticky;
+   position: sticky;
+   top: 0px;
+}
+
 #img {
    width: 130px;
 }
@@ -20,7 +26,7 @@ table {
 }
 
 table tr :hover {
-   background-color: rgba(156, 189, 211, 0.911);
+   background-color: rgba(142, 185, 214, 0.911);
 }
 
 #AdBanner {

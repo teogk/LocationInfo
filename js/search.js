@@ -10,12 +10,10 @@ function App($) {
     let tableIndex = 0;
     let userLanguage = navigator.language;
 
-    handleUserLanguage();
-    limitResultsIfNeeded(); //Set up results count
+    checkUserBrowserLanguage();
+    checkScreenAndLimitResultsIfNeeded();
     input.focus();
-
-    input.on("keypress", handleInput);
-    input.on("keyup", handleWhenUserDeletesInput);
+    input.on("input", handleInput);
     searchButton.on("click", searchToGoogle);
 
     //HTML handling begin
@@ -32,19 +30,10 @@ function App($) {
         }
     }
 
-    function limitResultsIfNeeded() {
+    function checkScreenAndLimitResultsIfNeeded() {
         let isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
         if (isMobile) {
             resultsCount = 10;
-        }
-    }
-    function handleWhenUserDeletesInput() {
-        const inputLength = input.val().length;
-
-        if (inputLength < 2) {
-            clearTimeout(window.timer);
-            table.empty();
-            searchButton.prop('disabled', true);
         }
     }
 
@@ -56,13 +45,17 @@ function App($) {
     //HTML handling end
 
 
-    function handleInput(e) {
-        handleInputLanguage(e);
+    function handleInput() {
+        handleInputLanguage();
         const inputLength = input.val().length;
 
         if (inputLength > 1) {
             clearTimeout(window.timer);
             window.timer = setTimeout(getLocations, 700);
+        } else if (inputLength < 2) {
+            clearTimeout(window.timer);
+            table.empty();
+            searchButton.prop('disabled', true);
         }
     }
 
@@ -104,34 +97,27 @@ function App($) {
         sessionStorage.clear();
     }
 
-    function handleUserLanguage() {
+    function checkUserBrowserLanguage() {
         userLanguage = userLanguage.toLowerCase().substring(0, 2);
         if (userLanguage == "el") {
             translateInGreek();
         } else {
-            userLanguage = "en"; //Make it English to support other languages
+            userLanguage = "en"; //Make it English
         }
     }
 
-    function handleInputLanguage(e) {
-        handleGreekInput(e);
-        handleEnglishInput(e);
-    }
-
-    function handleGreekInput(e) {
-        let regex = new RegExp("^[α-ωΑ-Ω]*$");
-        let str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
-        if (regex.test(str)) {
+    function handleInputLanguage() {
+        let code = input.val().substring(0, 1).charCodeAt(0);
+        if (isGreek(code)) {
             userLanguage = "el";
         }
-    }
-
-    function handleEnglishInput(e) {
-        let regex = new RegExp("^[a-zA-Z]*$");
-        let str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
-        if (regex.test(str)) {
+        else {
             userLanguage = "en";
         }
+    }
+
+    function isGreek(charCode) {
+        return (charCode >= 902 && charCode <= 974)
     }
 
     function handleError(jqXHR, textStatus, errorThrown) {
